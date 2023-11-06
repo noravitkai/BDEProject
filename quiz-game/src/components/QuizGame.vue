@@ -9,6 +9,7 @@
         How well do you know famous literary works and their authors? Challenge
         yourself with 15 questions in this fun educational quiz.
       </p>
+      <!-- Start button -->
       <button
         @click="startQuiz"
         v-if="!quizStarted"
@@ -18,8 +19,12 @@
       </button>
     </div>
     <div v-if="quizStarted">
+      <!-- Timer -->
+      <p class="text-md" v-if="currentQuestionIndex >= 0">
+        {{ remainingTime }} seconds left
+      </p>
       <!-- Progress bar -->
-      <div class="mb-8">
+      <div class="mb-8" v-if="currentQuestionIndex >= 0">
         <div class="h-6 bg-amber-100 relative">
           <div
             :style="{ width: progressBarWidth }"
@@ -28,7 +33,7 @@
         </div>
       </div>
       <!-- Questions -->
-      <div v-if="currentQuestion">
+      <div v-if="currentQuestionIndex >= 0">
         <h2 class="text-xl font-bold">{{ currentQuestion.question }}</h2>
         <ul class="list-none p-0">
           <li
@@ -80,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 
 // Question type
 interface Question {
@@ -135,7 +140,7 @@ const questions = ref<Question[]>([
   },
   {
     question:
-      'In "Alice`s Adventures in Wonderland" by Lewis Carroll, which character embodies the idea of language and communication breaking down, highlighting the nonsensical nature of language?',
+      'In "Alice`s Adventures in Wonderland" by Lewis Carroll, which character embodies the idea of communication breaking down, highlighting the nonsensical nature of language?',
     answers: ["The Cheshire Cat", "The Mad Hatter", "The White Rabbit"],
     correctAnswer: "The Mad Hatter",
   },
@@ -200,6 +205,7 @@ const quizStarted = ref(false);
 // Function to start the quiz
 const startQuiz = () => {
   quizStarted.value = true;
+  startQuestionTimer();
 };
 
 // Track the current question and the user's correct answers
@@ -257,7 +263,42 @@ const progressBarWidth = computed(() => {
       ((currentQuestionIndex.value + 1) / questions.value.length) * 100;
     return `${progress}%`;
   } else {
-    return "100%";
+    return "0%"; // Hide the progress bar when the quiz is completed
+  }
+});
+
+// Timer duration and remaining time
+const questionTimerDuration: number = 20; // In seconds
+const remainingTime = ref(questionTimerDuration);
+let questionTimer: number | undefined;
+
+// Function to start the timer
+const startQuestionTimer = () => {
+  questionTimer = window.setInterval(() => {
+    if (remainingTime.value > 0) {
+      remainingTime.value--;
+    } else {
+      // Time's up, automatically proceed to the next question
+      window.clearInterval(questionTimer!);
+      nextQuestion();
+    }
+  }, 1000);
+};
+
+// Function to stop the timer
+const stopQuestionTimer = () => {
+  if (questionTimer !== undefined) {
+    window.clearInterval(questionTimer);
+    questionTimer = undefined;
+  }
+};
+
+// Execute startQuestionTimer when a new question is displayed
+watch(currentQuestion, () => {
+  if (currentQuestion.value) {
+    remainingTime.value = questionTimerDuration;
+    stopQuestionTimer(); // Stop the previous timer if any is running
+    startQuestionTimer(); // Start a new timer for the current question
   }
 });
 </script>
