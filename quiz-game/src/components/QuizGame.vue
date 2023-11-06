@@ -5,67 +5,76 @@
       <h1 class="text-3xl font-bold text-amber-400 mb-4">
         Test Your Literary Knowledge!
       </h1>
-      <p class="text-md text-black">
+      <p class="text-md text-black mb-4">
         How well do you know famous literary works and their authors? Challenge
         yourself with 15 questions in this fun educational quiz.
       </p>
-    </div>
-    <!-- Progress Bar -->
-    <div class="mb-8">
-      <div class="h-6 bg-amber-100 relative">
-        <div
-          :style="{ width: progressBarWidth }"
-          class="h-6 bg-amber-400 transition-width duration-300 ease-in-out"
-        ></div>
-      </div>
-    </div>
-    <!-- Questions -->
-    <div v-if="currentQuestion">
-      <h2 class="text-xl font-bold">{{ currentQuestion.question }}</h2>
-      <ul class="list-none p-0">
-        <li
-          v-for="(answer, index) in currentQuestion.answers"
-          :key="index"
-          class="my-6 text-md"
-        >
-          <button
-            @click="checkAnswer(answer)"
-            class="px-4 py-3 border-solid border-[0.075rem] border-gray-300 w-full text-left text-black cursor-pointer hover:bg-amber-100 hover:border-amber-300 duration-100 ease-in-out"
-          >
-            {{ answer }}
-          </button>
-        </li>
-      </ul>
-      <!-- Previous & Next buttons for navigation -->
-      <div class="flex mt-4 text-md">
-        <button
-          @click="previousQuestion"
-          v-if="currentQuestionIndex > 0"
-          class="mr-auto px-4 py-2 bg-amber-100 border-solid border-[0.075rem] border-amber-300 text-black cursor-pointer hover:bg-amber-300 duration-300 ease-in-out"
-        >
-          Previous
-        </button>
-        <button
-          @click="nextQuestion"
-          v-if="currentQuestionIndex < questions.length - 1"
-          class="ml-auto px-4 py-2 bg-amber-100 border-solid border-[0.075rem] border-amber-300 text-black cursor-pointer hover:bg-amber-300 duration-300 ease-in-out"
-        >
-          Next
-        </button>
-      </div>
-    </div>
-    <!-- Completion -->
-    <div class="flex flex-col items-center" v-else>
-      <h2 class="text-xl font-semibold my-4">Quiz Completed</h2>
-      <p class="text-md mb-4">
-        You got {{ correctAnswers }} out of {{ questions.length }} correct!
-      </p>
       <button
-        @click="restartQuiz"
+        @click="startQuiz"
+        v-if="!quizStarted"
         class="px-4 py-2 bg-amber-100 border-solid border-[0.075rem] border-amber-300 text-black cursor-pointer hover:bg-amber-300 duration-300 ease-in-out"
       >
-        Restart Quiz
+        Start Quiz
       </button>
+    </div>
+    <div v-if="quizStarted">
+      <!-- Progress bar -->
+      <div class="mb-8">
+        <div class="h-6 bg-amber-100 relative">
+          <div
+            :style="{ width: progressBarWidth }"
+            class="h-6 bg-amber-400 transition-width duration-300 ease-in-out"
+          ></div>
+        </div>
+      </div>
+      <!-- Questions -->
+      <div v-if="currentQuestion">
+        <h2 class="text-xl font-bold">{{ currentQuestion.question }}</h2>
+        <ul class="list-none p-0">
+          <li
+            v-for="(answer, index) in currentQuestion.answers"
+            :key="index"
+            class="my-6 text-md"
+          >
+            <button
+              @click="checkAnswer(answer)"
+              class="px-4 py-3 border-solid border-[0.075rem] border-gray-300 w-full text-left text-black cursor-pointer hover:bg-amber-100 hover:border-amber-300 duration-100 ease-in-out"
+            >
+              {{ answer }}
+            </button>
+          </li>
+        </ul>
+        <!-- Previous & Next buttons for navigation -->
+        <div class="flex mt-4 text-md">
+          <button
+            @click="previousQuestion"
+            v-if="currentQuestionIndex > 0"
+            class="mr-auto px-4 py-2 bg-amber-100 border-solid border-[0.075rem] border-amber-300 text-black cursor-pointer hover:bg-amber-300 duration-300 ease-in-out"
+          >
+            Previous
+          </button>
+          <button
+            @click="nextQuestion"
+            v-if="currentQuestionIndex < questions.length - 1"
+            class="ml-auto px-4 py-2 bg-amber-100 border-solid border-[0.075rem] border-amber-300 text-black cursor-pointer hover:bg-amber-300 duration-300 ease-in-out"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+      <!-- Completion -->
+      <div class="flex flex-col items-center" v-else>
+        <h2 class="text-xl font-semibold my-4">Quiz Completed</h2>
+        <p class="text-md mb-4">
+          You got {{ correctAnswers }} out of {{ questions.length }} correct!
+        </p>
+        <button
+          @click="restartQuiz"
+          class="px-4 py-2 bg-amber-100 border-solid border-[0.075rem] border-amber-300 text-black cursor-pointer hover:bg-amber-300 duration-300 ease-in-out"
+        >
+          Restart Quiz
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -184,6 +193,14 @@ const questions = ref<Question[]>([
     correctAnswer: "Leo Tolstoy",
   },
 ]);
+
+// Track whether the quiz has started
+const quizStarted = ref(false);
+
+// Function to start the quiz
+const startQuiz = () => {
+  quizStarted.value = true;
+};
 
 // Track the current question and the user's correct answers
 const currentQuestionIndex = ref(0);
