@@ -10,6 +10,15 @@
         yourself with 15 questions in this fun educational quiz.
       </p>
     </div>
+    <!-- Progress Bar -->
+    <div class="mb-8">
+      <div class="h-6 bg-amber-100 relative">
+        <div
+          :style="{ width: progressBarWidth }"
+          class="h-6 bg-amber-400 transition-width duration-300 ease-in-out"
+        ></div>
+      </div>
+    </div>
     <!-- Questions -->
     <div v-if="currentQuestion">
       <h2 class="text-xl font-bold">{{ currentQuestion.question }}</h2>
@@ -223,4 +232,15 @@ const restartQuiz = () => {
   currentQuestionIndex.value = 0;
   correctAnswers.value = 0;
 };
+
+// Computed property for the progress bar width
+const progressBarWidth = computed(() => {
+  if (currentQuestionIndex.value >= 0) {
+    const progress =
+      ((currentQuestionIndex.value + 1) / questions.value.length) * 100;
+    return `${progress}%`;
+  } else {
+    return "100%";
+  }
+});
 </script>
