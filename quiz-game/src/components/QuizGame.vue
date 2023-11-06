@@ -64,8 +64,15 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
+// Question type
+interface Question {
+  question: string;
+  answers: string[];
+  correctAnswer: string;
+}
+
 // Quiz questions
-const questions = ref([
+const questions = ref<Question[]>([
   {
     question:
       "Which book is the famous work of the author Friedrich Nietzsche?",
