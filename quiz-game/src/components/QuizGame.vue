@@ -34,7 +34,9 @@
       </div>
       <!-- Questions -->
       <div v-if="currentQuestionIndex >= 0">
-        <h2 class="text-xl font-bold">{{ currentQuestion.question }}</h2>
+        <h2 class="text-xl font-bold" id="question">
+          {{ currentQuestion.question }}
+        </h2>
         <ul class="list-none p-0">
           <li
             v-for="(answer, index) in currentQuestion.answers"
@@ -44,6 +46,7 @@
             <button
               @click="checkAnswer(answer)"
               class="px-4 py-3 border-solid border-[0.075rem] border-gray-300 w-full text-left text-black cursor-pointer hover:bg-amber-100 hover:border-amber-300 duration-100 ease-in-out"
+              :id="'answer'"
             >
               {{ answer }}
             </button>
