@@ -73,7 +73,7 @@
       <!-- Completion -->
       <div class="flex flex-col items-center" v-else>
         <h2 class="text-xl font-semibold my-4">Quiz Completed</h2>
-        <p class="text-md mb-4">
+        <p class="text-md mb-4" id="score">
           You got {{ correctAnswers }} out of {{ questions.length }} correct!
         </p>
         <button
