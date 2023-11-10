@@ -105,7 +105,7 @@ const questions = [
   },
 ];
 
-fixture`Quiz Game Test`.page`./dist/index.html`;
+fixture`Quiz Game Test`.page`dist/index.html`;
 
 test("Quiz start and first question answer", async (t) => {
   // Start the quiz
