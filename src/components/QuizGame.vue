@@ -82,6 +82,16 @@
         >
           Restart Quiz
         </button>
+        <p class="text-sm text-gray-600 mt-12">
+          Want to see more of my work? Discover my complete portfolio at
+          <a
+            href="https://noravitkai.com"
+            target="_blank"
+            class="text-amber-400 font-bold hover:underline"
+          >
+            noravitkai.com</a
+          >.
+        </p>
       </div>
     </div>
   </div>
